@@ -43,4 +43,10 @@ class CategorieController extends Controller
         return redirect()->back();
       
    }
+
+   public function deleteCategorie($id){
+        Categorie::find($id)->delete();
+        Session::flash('success','Depense supprimer avec succés');
+        return redirect()->back();
+   }
 }

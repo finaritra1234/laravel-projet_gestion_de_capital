@@ -35,6 +35,7 @@ Route::prefix('admin')->group(function() {
     Route::post('/compte',  [CompteController::class, 'addCompte' ])->name('add.compte.submit');
     Route::get('/categorie',  [CategorieController::class, 'categorie' ])->name('categorie');
     Route::post('/categorie',  [CategorieController::class, 'addCategorie' ])->name('add.categorie.submit');
+    Route::get('/delete_categorie/{id}',  [CategorieController::class, 'deleteCategorie' ])->name('categorie.delete');
     Route::get('/depense',  [DepenseController::class, 'depense' ])->name('depense');
     Route::get('/depense/now',  [DepenseController::class, 'depense_now' ])->name('depense.now');
     Route::get('/depense/date',  [DepenseController::class, 'depense_date' ])->name('depense.date');
