@@ -18,12 +18,15 @@ class DepenseController extends Controller
     public function depense () 
     {
 
-        //aficher le solde en haut a droit du navbar
+        //afideper le solde en haut a droit du navbar
         $depense = compte::get()->first();
         $mont = $depense->solde;
 
         //les depense
         $dep = Depense::orderBy('created_at', 'desc')->with('categorie:id,nom_categorie')->paginate(20);
+        //affideper commande auj
+        $now = Carbon::now()->format('Y-m-d');
+        $dep_now = Depense::orderBy('created_at', 'desc')->where('date_depense','like','%'.$now.'%')->with('categorie:id,nom_categorie')->paginate(20);
         //obtenir les categories
         $cats = Categorie::all();
         //obtenir le compte
@@ -32,6 +35,7 @@ class DepenseController extends Controller
         $now = Carbon::now()->format('Y-m-d');
         return view('depense.depense',[
             'deps' => $dep, 
+            'dep_now' => $dep_now, 
             'mont' => $mont,
             'cats' => $cats,
             'compte_id' => $compte_id,
@@ -98,32 +102,11 @@ class DepenseController extends Controller
      
     }
 
-    public function depense_now()
-    {
-        //aficher le solde en haut a droit du navbar
-        $depense = compte::get()->first();
-        $mont = $depense->solde;
-        //obtenir les categories
-        $cats = Categorie::all();
-        //obtenir le compte
-        $comptes = Compte::get()->first();
-        $compte_id = $comptes->id;
-
-        //afficher commande auj
-        $now = Carbon::now()->format('Y-m-d');
-        $dep = Depense::orderBy('created_at', 'desc')->where('date_depense','like','%'.$now.'%')->with('categorie:id,nom_categorie')->paginate(20);
-        return view('depense.depense',[
-            'deps' => $dep, 
-            'mont' => $mont,
-            'cats' => $cats,
-            'compte_id' => $compte_id,
-            'now' => $now,
-        ]);
-    }
+    
 
     public function depense_date()
     {
-        //aficher le solde en haut a droit du navbar
+        //afideper le solde en haut a droit du navbar
         $depense = compte::get()->first();
         $mont = $depense->solde;
         //obtenir les categories
@@ -132,13 +115,17 @@ class DepenseController extends Controller
         $comptes = Compte::get()->first();
         $compte_id = $comptes->id;
 
-        //afficher commande auj
+        //affideper commande auj
         $now = Carbon::now()->format('Y-m-d');
 
         $date = \Request::get('date');
         $dep = Depense::orderBy('created_at', 'desc')->where('date_depense','like','%'.$date.'%')->with('categorie:id,nom_categorie')->paginate(20);
+         //affideper commande auj
+        
+         $dep_now = Depense::orderBy('created_at', 'desc')->where('date_depense','like','%'.$now.'%')->with('categorie:id,nom_categorie')->paginate(20);
         return view('depense.depense',[
             'deps' => $dep, 
+            'dep_now' => $dep_now, 
             'mont' => $mont,
             'cats' => $cats,
             'compte_id' => $compte_id,
@@ -148,7 +135,7 @@ class DepenseController extends Controller
 
     public function depense_date_entre()
     {
-        //aficher le solde en haut a droit du navbar
+        //afideper le solde en haut a droit du navbar
         $depense = compte::get()->first();
         $mont = $depense->solde;
         //obtenir les categories
@@ -157,58 +144,82 @@ class DepenseController extends Controller
         $comptes = Compte::get()->first();
         $compte_id = $comptes->id;
 
-        //afficher commande auj
+        //affideper commande auj
         $now = Carbon::now()->format('Y-m-d');
 
         $date1 = \Request::get('date_one');
         $date2 = \Request::get('date_two');
-        $deps = Depense::whereBetween('date_depense', [$date1, $date2])
-        ->with('categorie:id,nom_categorie')->paginate(20);
-        return view('depense.depense',[
-            'deps' => $deps, 
-            'mont' => $mont,
-            'cats' => $cats,
-            'compte_id' => $compte_id,
-            'now' => $now,
-        ]);
-    }
-    public function depense_date_week()
-    {
-        //aficher le solde en haut a droit du navbar
-        $depense = compte::get()->first();
-        $mont = $depense->solde;
-        //obtenir les categories
-        $cats = Categorie::all();
-        //obtenir le compte
-        $comptes = Compte::get()->first();
-        $compte_id = $comptes->id;
-
-        //afficher commande auj
-        $now = Carbon::now()->format('Y-m-d');
-        //obtenir le semaine precedent
-        $currentDate = Carbon::now();
+        $deps = Depense::whereBetween('date_depense', [$date1, $date2])->with('categorie:id,nom_categorie')->paginate(20);
+         //affideper commande auj
        
-        
-        while ($currentDate->lessThan($currentDate)) {
-            
-            $currentDate->subDays(7);
-        }
-        $deps = Depense::whereBetween('date_depense', [$now, $currentDate])
-        ->with('categorie:id,nom_categorie')->paginate(20);
+         $dep_now = Depense::orderBy('created_at', 'desc')->where('date_depense','like','%'.$now.'%')->with('categorie:id,nom_categorie')->paginate(20);
         return view('depense.depense',[
             'deps' => $deps, 
+            'dep_now' => $dep_now, 
             'mont' => $mont,
             'cats' => $cats,
             'compte_id' => $compte_id,
-            'startOfWeek' => $currentDate,
-          
             'now' => $now,
         ]);
     }
+   
 
     public function deleteDepense($id){
         Depense::find($id)->delete();
         Session::flash('success','Depense supprimer avec succés');
+        return redirect()->back();
+    }
+
+    public function editDepense($id){
+         //obtenir les categories
+         $cats = Categorie::all();
+         //obtenir la depense a modifier
+        $dep = Depense::find($id);
+       
+        return view('depense.edit',
+          [
+            'dep'=> $dep,
+            'cats' => $cats
+          ]);
+   }
+
+    public function editDepenseSubmit(Request $request,$id){
+        //Validation
+        $this->validate($request, [
+            
+            'montant_depense' => 'required|numeric',
+            'categorie_id' => 'required',
+            'date_depense' => 'required',
+        ]);
+   
+    
+        $dep =  Depense::find($id);
+        $dep->montant_depense = $request->montant_depense;
+        $dep->categorie_id = $request->categorie_id;
+        $dep->date_depense = $request->date_depense;
+        $dep->update();
+        Session::flash('success','La depense N° : '.$request->id.' a eté  modifier avec succes');
+
+        return redirect()->back();
+        
+    }
+
+    public function annulerDepense($id){
+
+       
+        $dep = Depense::find($id);
+        //obteni id du compte
+        $compte = Compte::where('id',$dep->compte_id)->first();
+        //obtenir le solde du compte
+        $solde_compte = $compte->solde;
+        //mis a jour du solde
+        $nouveau_solde_compte =  $solde_compte + $dep->montant_depense;
+        $compte->solde = $nouveau_solde_compte;
+        $compte->update();
+
+        //effacer la depense
+        Depense::find($id)->delete();
+        Session::flash('success','Depense annuler avec succés');
         return redirect()->back();
     }
 

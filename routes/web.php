@@ -37,10 +37,12 @@ Route::prefix('admin')->group(function() {
     Route::post('/categorie',  [CategorieController::class, 'addCategorie' ])->name('add.categorie.submit');
     Route::get('/delete_categorie/{id}',  [CategorieController::class, 'deleteCategorie' ])->name('categorie.delete');
     Route::get('/depense',  [DepenseController::class, 'depense' ])->name('depense');
-    Route::get('/depense/now',  [DepenseController::class, 'depense_now' ])->name('depense.now');
     Route::get('/depense/date',  [DepenseController::class, 'depense_date' ])->name('depense.date');
     Route::get('/depense/date_entre',  [DepenseController::class, 'depense_date_entre' ])->name('depense.date_entre');
     Route::post('/depense',  [DepenseController::class, 'addDepense' ])->name('add.depense.submit');
     Route::get('/delete_depense/{id}',  [DepenseController::class, 'deleteDepense' ])->name('depense.delete');
-    Route::get('/depense/date_week',  [DepenseController::class, 'depense_date_week' ])->name('depense.date_week');
+    Route::get('/edit_depense/{id}',  [DepenseController::class, 'editDepense' ])->name('depense.edit');
+    Route::post('/edit_depense/{id}',  [DepenseController::class, 'editDepenseSubmit' ])->name('depense.edit.submit');
+    Route::get('/annuler_depense/{id}',  [DepenseController::class, 'annulerDepense' ])->name('depense.annuler');
+  
 });

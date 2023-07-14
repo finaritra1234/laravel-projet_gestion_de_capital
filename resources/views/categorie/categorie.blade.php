@@ -57,18 +57,18 @@
         <div class="card">
         <div class="card-body">
             <div class="card-title d-flex align-items-start justify-content-between">
-            <div class="avatar flex-shrink-0">
-                <img src="../assets/img/icons/unicons/cc-primary.png" alt="chart success" class="rounded">
-            </div>
-            <div class="dropdown">
-                <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-              
-                <a class="dropdown-item" href="{{ route('categorie.delete',['id'=>$cat->id])}}" onclick="return confirm('Voulez-vous supprimer?')">Supprimer</a>
+                <div class="avatar flex-shrink-0">
+                    <img src="../assets/img/icons/unicons/cc-primary.png" alt="chart success" class="rounded">
                 </div>
-            </div>
+                <div class="dropdown">
+                    <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                
+                    <a class="dropdown-item" href="{{ route('categorie.delete',['id'=>$cat->id])}}" onclick="return confirm('Voulez-vous supprimer?')">Supprimer</a>
+                    </div>
+                </div>
             </div>
             <span class="fw-semibold d-block mb-1">categorie</span>
             <h3 class="card-title mb-2">{{$cat->nom_categorie}}</h3>

@@ -101,8 +101,8 @@
         
                 <div class="demo-inline-spacing mx-4" >
                     <a href="{{ route('depense')}}" class="btn btn-primary">Tout</a> 
-                    <a href="{{ route('depense.now')}}" class="btn btn-primary">Aujourd'hui</a> 
-                    <a href="{{ route('depense.date_week')}}" class="btn btn-primary">Une semaine</a> 
+                  
+                   
                     <button class="btn btn-primary">Un mois</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uneDate">Une date</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#entreDate">Date entre</button>
@@ -197,27 +197,65 @@
                     </div>
                     </form>
                 </div>
-        
+                @php
+                    function valeur($valeur){
+                        $number = $valeur;
+                        $n=  str_replace(',',' ', number_format($number,3));
+                        $a = strstr($n, '.');
+                        return $montant= str_replace($a,'',$n);
+                    }
+                   
+                @endphp
+                @php
+                    $total = 0;
+                @endphp
                 <div class="card-body">
                     @if(count($deps) > 0)       
                     <div class="d-flex flex-wrap" id="icons-container">
                         @foreach($deps as $dep)
 
                         @php
-                            $number = $dep->montant_depense;
-                            $n=  str_replace(',',' ', number_format($number,3));
-                            $a = strstr($n, '.');
-                            $montant= str_replace($a,'',$n);
+                            $montant = valeur($dep->montant_depense)
                         @endphp
-                        <div class="card icon-card cursor-pointer text-center mb-4 mx-2">
-                        <div class="card-body">
-                            <i class="bx bxl-bitcoin mb-2"></i>
-                            <p class="icon-name text-capitalize text-truncate mb-0">{{$dep->categorie->nom_categorie}}</p>
-                            <p class="icon-name text-capitalize text-truncate mb-0">{{$montant}} Ar</p>
-                            <p class="icon-name text-capitalize text-truncate mb-0">{{$dep->date_depense}}</p>
-                        </div>
-                        </div>
+                        
+                            <div class="card icon-card  text-center mb-4 mx-4">
+                                <div class="card-body">
+                                    <div class="card-title d-flex align-items-start justify-content-between">
+                                        <div class="avatar flex-shrink-0">
+                                            <img src="{{asset('/assets/img/icons/unicons/cc-primary.png')}}" alt="chart success" class="rounded">
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" href="{{ route('depense.annuler',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous anuuler?')"><i style="color:#696cff !important">Annuler</i></a>
+                                            <a class="dropdown-item" href="{{ route('depense.delete',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous supprimer?')"><i style="color:#ff3e1d !important">Supprimer</i> </a>
+                                            <a class="dropdown-item" href="{{ route('depense.edit',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous modifier?')"><i style="color:#03c3ec !important">Modifier</i></a>
+                                           
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i class="bx bxl-bitcoin mb-2"></i>
+                                    <p class="icon-name text-capitalize text-truncate mb-0">{{$dep->categorie->nom_categorie}}</p>
+                                    <p class="icon-name text-capitalize text-truncate mb-0">{{$montant}} Ar</p>
+                                    <p class="icon-name text-capitalize text-truncate mb-0">{{$dep->date_depense}}</p>
+                                    
+                                </div>
+                            </div>
+                            @php
+                            $total += $dep->montant_depense;
+                            @endphp
                         @endforeach
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                @php
+                                    $total_montant = valeur($total)
+                                @endphp
+                              <h3 class="mb-0">Total: {{$total_montant}} AR</h3>
+                            </div>
+                            
+                        </div>  
                         
                     </div>
                     <ul class="pagination">
@@ -267,7 +305,7 @@
                     @php
                         $prixTotal = 0;
                     @endphp
-                    @foreach($deps as $depense)
+                    @foreach($dep_now as $depense)
                         @php
                             $number = $depense->montant_depense;
                             $n=  str_replace(',',' ', number_format($number,3));
@@ -292,8 +330,9 @@
                                 <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu" style="">
-                                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Modifier</a>
-                                <a class="dropdown-item" href="{{ route('depense.delete',['id'=>$depense->id])}}"><i class="bx bx-trash me-1"></i> Supprimer</a>
+                                <a class="dropdown-item" href="{{ route('depense.annuler',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous anuuler?')"><i style="color:#696cff !important">Annuler</i></a>
+                                            <a class="dropdown-item" href="{{ route('depense.delete',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous supprimer?')"><i style="color:#ff3e1d !important">Supprimer</i> </a>
+                                            <a class="dropdown-item" href="{{ route('depense.edit',['id'=>$dep->id])}}" onclick="return confirm('Voulez-vous modifier?')"><i style="color:#03c3ec !important">Modifier</i></a>
                                 </div>
                             </div>
                           </div>
@@ -313,7 +352,7 @@
                     @endphp
                        
                       </ul>
-                      <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
                               
                               <h3 class="mb-0">Total</h3>
@@ -322,7 +361,7 @@
                               <h6 class="mb-0">{{$montantTotal}}</h6>
                               <span class="text-muted">AR</span>
                             </div>
-                          </div>     
+                        </div>     
                 </div>
             </div>
         </div>
