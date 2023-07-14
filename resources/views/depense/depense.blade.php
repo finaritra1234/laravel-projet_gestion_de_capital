@@ -293,7 +293,7 @@
                                 </button>
                                 <div class="dropdown-menu" style="">
                                 <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Modifier</a>
-                                <a class="dropdown-item" href="{{ route('depense.delete',['id'=>$depense->id])}}" ><i class="bx bx-trash me-1"></i> Supprimer</a>
+                                <a class="dropdown-item" href="{{ route('depense.delete',['id'=>$depense->id])}}"><i class="bx bx-trash me-1"></i> Supprimer</a>
                                 </div>
                             </div>
                           </div>

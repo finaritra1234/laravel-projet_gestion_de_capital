@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Categorie;
 class Depense extends Model
 {
     protected $fillable = [
@@ -12,7 +12,7 @@ class Depense extends Model
     ];
   
     public function categorie(){
-        return $this->belongsTo('App\Models\Categorie');
+        return $this->belongsTo(Categorie::class);
     }
     public function compte(){
         return $this->belongsTo('App\Models\Compte');
