@@ -296,8 +296,12 @@
         </div>
         <div class="col-12 col-md-8 col-lg-4 order-3 order-md-2">
         <div class="card mb-4">
+                @php
+                    $date = date("d/m/Y")
+                @endphp
+               
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">Depense aujourdhui</h5>
+                    <h5 class="mb-0">Aujourd'hui,   {{ $date}} </h5>
                     
                 </div>
                 <div class="card-body">
