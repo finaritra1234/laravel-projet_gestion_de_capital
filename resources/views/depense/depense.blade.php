@@ -27,7 +27,7 @@
     <div class="col-xxl">
         <div class="card mb-4">
         <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0">Ajouter categorie des depenses</h5>
+            <h5 class="mb-0">Ajouter une depenses</h5>
           
         </div>
         <div class="card-body">

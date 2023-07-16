@@ -58,40 +58,48 @@ class DepenseController extends Controller
         $compte = Compte::where('id',$request->compte_id)->first();
         $solde_compte = $compte->solde;
         $nouveau_solde_compte =  $solde_compte - $request->montant_depense;
-        if($request->montant_depense <= 0) {
-            Session::flash('error','Entrer le montant de la depense');
+
+        $now = Carbon::now()->format('Y-m-d');
+
+        if($request->date_depense > $now){
+            Session::flash('error','Veuillez choisir la date du depense correcte');
             return redirect()->back();
         } else {
-           
-
-            if($solde_compte < $request->montant_depense )
-            {
-                Session::flash('error','Le solde de votre compte est insuffisant');
+            if($request->montant_depense <= 0) {
+                Session::flash('error','Entrer le montant de la depense');
                 return redirect()->back();
             } else {
-                //Mise  a jour du solde du compte
-                $now = Carbon::now()->format('Y-m-d');
-                $compte->solde = $nouveau_solde_compte;
-                $compte->update();
-                //sauvegarder au table depense
-              
-                $depense = new Depense();
                
-                if($request->date_depense == ''){
-                    $depense->date_depense =   $now;
-                }else{
-                    $depense->date_depense =   $request->date_depense;
-                }
-               
-                $depense->montant_depense = $request->montant_depense;
-                $depense->categorie_id = $request->categorie_id;
-                $depense->compte_id = $request->compte_id;
-        
-                $depense->save();
     
-                Session::flash('success','La depense est enregister avec success!');
-                return redirect()->back();
-            }
+                if($solde_compte < $request->montant_depense )
+                {
+                    Session::flash('error','Le solde de votre compte est insuffisant');
+                    return redirect()->back();
+                } else {
+                    //Mise  a jour du solde du compte
+                    $now = Carbon::now()->format('Y-m-d');
+                    $compte->solde = $nouveau_solde_compte;
+                    $compte->update();
+                    //sauvegarder au table depense
+                  
+                    $depense = new Depense();
+                   
+                    if($request->date_depense == ''){
+                        $depense->date_depense =   $now;
+                    }else{
+                        $depense->date_depense =   $request->date_depense;
+                    }
+                   
+                    $depense->montant_depense = $request->montant_depense;
+                    $depense->categorie_id = $request->categorie_id;
+                    $depense->compte_id = $request->compte_id;
+            
+                    $depense->save();
+        
+                    Session::flash('success','La depense est enregister avec success!');
+                    return redirect()->back();
+                }
+            } 
         }
 
         
